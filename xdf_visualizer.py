@@ -1,34 +1,25 @@
 import pyxdf
 
-data, header = pyxdf.load_xdf(
-    r"C:\Users\Yago\Desktop\CurrentStudy\exp001\block_Default.xdf"
-)
+_WIDTH_T = 12
+_WIDTH_S = 30
 
-series = data[0]["time_series"]
-timestamps = data[0]["time_stamps"]
+_TITLE1 = "Timestamps"
 
-width_t = 12
-width_s = 30
 
-title1 = "Timestamps"
-title2 = "Series (Data)"
+def read_xdf(file_path: str, stream_index: int = 0, channel_index: int = 0) -> str:
+    data, _ = pyxdf.load_xdf(rf"{file_path}")
 
-print(f"{title1:<{width_t}} | {title2:<{width_s}}")
-print("-" * (width_t + width_s + 3))
+    series = data[stream_index]["time_series"]
+    timestamps = data[stream_index]["time_stamps"]
 
-GREEN = "\033[92m"
-RED = "\033[91m"
-RESET = "\033[0m"
+    lines = []
+    lines.append(f"{_TITLE1:<{_WIDTH_T}} | Canal {channel_index:<{_WIDTH_S}}")
+    lines.append("-" * (_WIDTH_T + _WIDTH_S + 3))
 
-for i in range(len(series)):
-    s = series[i]
+    for i in range(len(series)):
+        val = series[i][channel_index]
+        t = timestamps[i]
 
-    color = ""
-    if "Released" in str(s):
-        color = RED
-    elif "Pressed" in str(s):
-        color = GREEN
+        lines.append(f"{t:<{_WIDTH_T}.4f} | {val:<{_WIDTH_S}.6f}")
 
-    t = timestamps[i]
-    print(f"{t:<{width_t}.4f} | {color}{str(s):<{width_s}}{RESET}")
-    print("-" * (width_t + width_s + 3))
+    return "\n".join(lines)
