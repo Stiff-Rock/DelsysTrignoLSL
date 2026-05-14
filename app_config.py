@@ -4,7 +4,7 @@ import os
 _CONFIG_FILE_PATH = "config.ini"
 _DEFAULT_CONFIG = {
     "CONNECTION": {"ip": "127.0.0.1", "cmd_port": "50040", "data_port": "50041"},
-    "UI": {"update_interval": "150"},
+    "UI": {"update_interval": "150", "samples_per_page": "5000"},
     "DEBUG": {"print_samples": "False", "print_xdf_contents": "False"},
 }
 _CONFIG: ConfigParser
@@ -27,15 +27,13 @@ def _save_config():
 
 
 def update_settings(
-    ip: str,
-    cmd_port: str,
-    data_port: str,
-    update_interval: str,
+    ip: str, cmd_port: str, data_port: str, update_interval: str, samples_per_page: str
 ):
     _CONFIG["CONNECTION"]["ip"] = ip
     _CONFIG["CONNECTION"]["cmd_port"] = cmd_port
     _CONFIG["CONNECTION"]["data_port"] = data_port
     _CONFIG["UI"]["update_interval"] = update_interval
+    _CONFIG["UI"]["samples_per_page"] = samples_per_page
     _save_config()
 
 
@@ -54,6 +52,10 @@ def get_data_port() -> int:
 
 def get_update_interval() -> int:
     return _CONFIG.getint("UI", "update_interval", fallback=50)
+
+
+def get_samples_per_page() -> int:
+    return _CONFIG.getint("UI", "samples_per_page", fallback=5000)
 
 
 def get_print_samples() -> bool:
