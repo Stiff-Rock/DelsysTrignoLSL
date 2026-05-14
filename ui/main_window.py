@@ -6,7 +6,7 @@ from ui.tab_config import ConfigTab
 from ui.tab_xdf import XdfTab
 
 WIDTH = 1100
-HEIGHT = 300
+HEIGHT = 400
 
 
 class TrignoApp:

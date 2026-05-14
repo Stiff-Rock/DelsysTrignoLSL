@@ -22,14 +22,18 @@ class XdfVisualizer:
             self.current_file_path = file_path
             self.current_file = pyxdf.load_xdf(rf"{file_path}")
 
+        self.load_stream_data(0)
+        return self.read_xdf(0, 0, 0)
+
+    def load_stream_data(self, stream_index: int):
         if self.current_file is None or self.current_file_path is None:
             return f"Invalid or empty file at path '{self.current_file_path}'"
 
         streams = self.current_file[0]
-        stream = streams[0]
+        stream = streams[stream_index]
 
         stream_labels = [f"{i}: {s['info']['name'][0]}" for i, s in enumerate(streams)]
-        chan_list = [str(i) for i in range(int(stream["info"]["channel_count"][0]))]
+        chan_list = [str(i + 1) for i in range(int(stream["info"]["channel_count"][0]))]
 
         PAGE_SIZE = config.get_samples_per_page()
         total_samples = len(stream["time_series"])
@@ -37,13 +41,13 @@ class XdfVisualizer:
 
         self._update_UI_callback(stream_labels, chan_list, total_pages, total_samples)
 
-        return self.read_xdf(0, 0, 0)
-
     def read_xdf(
         self, stream_index: int, channel_index: int, current_page_index: int
     ) -> str:
         if self.current_file is None or self.current_file_path is None:
             return f"Invalid or empty file at path '{self.current_file_path}'"
+
+        self.load_stream_data(stream_index)
 
         streams = self.current_file[0]
         stream = streams[stream_index]
@@ -52,7 +56,7 @@ class XdfVisualizer:
             f"PAGE:   {current_page_index + 1}",
             f"FILE:   {self.current_file_path.split('/')[-1]}",
             f"STREAM: {info['name'][0]}",
-            f"LABEL:  Channel {channel_index}",
+            f"LABEL:  Channel {channel_index + 1}",
             f"RATE:   {info['nominal_srate'][0]} Hz",
             "-" * 45,
             f"{'Timestamp':<15} | {'Value':<20}",

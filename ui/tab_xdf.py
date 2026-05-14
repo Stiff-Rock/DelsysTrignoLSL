@@ -123,13 +123,31 @@ class XdfTab(ttk.Frame):
         total_pages: int,
         total_samples: int,
     ):
-        self.stream_combo.config(values=streams)
-        self.stream_combo.current(0)
-        self.channel_combo.config(values=channels)
-        self.channel_combo.current(0)
-        self.page_spinbox["to"] = total_pages
-        self.total_pages_label.configure(text=f"{total_pages}")
-        self.total_samples_label.configure(text=f"{total_samples}")
+        # Update Stream Combobox if values changed
+        if list(self.stream_combo["values"]) != streams:
+            self.stream_combo.config(values=streams)
+            self.stream_combo.current(0)
+
+        # Update Channel Combobox if values changed
+        if list(self.channel_combo["values"]) != channels:
+            self.channel_combo.config(values=channels)
+            self.channel_combo.current(0)
+
+        # Update Spinbox range if total_pages changed
+        if float(self.page_spinbox["to"]) != float(total_pages):
+            self.page_spinbox["to"] = total_pages
+            # Ensure current value doesn't exceed the new max
+            if int(self.page_spinbox.get()) > total_pages:
+                self.page_spinbox.set(1)
+
+        # Update Labels only if text is different
+        new_pages_text = str(total_pages)
+        if self.total_pages_label.cget("text") != new_pages_text:
+            self.total_pages_label.configure(text=new_pages_text)
+
+        new_samples_text = str(total_samples)
+        if self.total_samples_label.cget("text") != new_samples_text:
+            self.total_samples_label.configure(text=new_samples_text)
 
     def _set_text(self, text: str):
         self.xdf_text_area.config(state="normal")

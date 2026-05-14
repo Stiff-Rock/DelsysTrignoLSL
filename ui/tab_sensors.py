@@ -24,13 +24,27 @@ class SensorsTab(ttk.Frame):
 
         # Sensor readings labels
         for i in range(16):
-            lbl = ttk.Label(
-                labels_frame,
-                text="+0.00000",
-                width=20,
-                font=("Consolas", 10, "bold"),
+            sensor_container = ttk.Frame(labels_frame)
+            sensor_container.grid(
+                row=i // 4, column=i % 4, padx=10, pady=10, sticky="nsew"
             )
-            lbl.grid(row=i // 4, column=i % 4, padx=5, pady=5)
+
+            header_lbl = ttk.Label(
+                sensor_container,
+                text=f"Sensor {i + 1}",
+                font=("Segoe UI", 9, "underline"),
+            )
+            header_lbl.pack()
+
+            lbl = ttk.Label(
+                sensor_container,
+                text="+0.00000",
+                width=15,
+                font=("Consolas", 10, "bold"),
+                anchor="center",
+            )
+            lbl.pack()
+
             labels_frame.grid_columnconfigure(i % 4, weight=1)
             self.voltage_labels.append(lbl)
 
