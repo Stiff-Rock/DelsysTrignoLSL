@@ -4,6 +4,7 @@ import app_config as config
 from ui.tab_sensors import SensorsTab
 from ui.tab_config import ConfigTab
 from ui.tab_xdf import XdfTab
+from ui.tab_recording import RecordingTab
 
 WIDTH = 1100
 HEIGHT = 400
@@ -29,12 +30,19 @@ class TrignoApp:
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill="both", expand=True)
 
-        self.tab_sensors = SensorsTab(self.notebook)
-        self.tab_xdf = XdfTab(self.notebook)
-        self.tab_config = ConfigTab(self.notebook)
+        self.tab_recording = RecordingTab(self.notebook)
+        self.notebook.add(self.tab_recording, text=" LSL Recording ")
 
-        self.notebook.add(self.tab_sensors, text=" Real-Time Sensors ")
+        # TODO: Force app restart or live restart
+        self.tab_sensors = None
+        if config.get_enable_trigno_module():
+            self.tab_sensors = SensorsTab(self.notebook)
+            self.notebook.add(self.tab_sensors, text=" Trigno Sensors ")
+
+        self.tab_xdf = XdfTab(self.notebook)
         self.notebook.add(self.tab_xdf, text=" XDF File Viewer ")
+
+        self.tab_config = ConfigTab(self.notebook)
         self.notebook.add(self.tab_config, text=" Settings ")
 
     def run(self):
@@ -43,5 +51,6 @@ class TrignoApp:
     """Events"""
 
     def _on_closing(self):
-        self.tab_sensors.shutdown_trigno()
+        if self.tab_sensors is not None:
+            self.tab_sensors.shutdown_trigno()
         self.root.destroy()
