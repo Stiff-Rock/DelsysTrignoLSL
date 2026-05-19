@@ -30,8 +30,8 @@ class TrignoApp:
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill="both", expand=True)
 
-        self.tab_recording = RecordingTab(self.notebook)
-        self.notebook.add(self.tab_recording, text=" LSL Recording ")
+        # self.tab_recording = RecordingTab(self.notebook)
+        # self.notebook.add(self.tab_recording, text=" LSL Recording ")
 
         # TODO: Force app restart or live restart
         self.tab_sensors = None
