@@ -6,4 +6,4 @@ class RecordingTab(ttk.Frame):
         super().__init__(parent)
 
         self.start_btn = ttk.Button(self, text="Start")
-        self.start_btn.pack(side="left", padx=5)
+        self.start_btn.pack(pady=100)
