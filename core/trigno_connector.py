@@ -6,6 +6,7 @@ from threading import Thread
 import app_config as config
 
 
+# TODO: REVISE IF THIS REALLY PUSHSES AT 2000
 class TrignoConnector:
     def __init__(self, update_function: Callable[[tuple[float, ...]], None]):
         self._update_UI_callback = update_function

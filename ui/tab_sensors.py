@@ -6,7 +6,7 @@ class SensorsTab(ttk.Frame):
     def __init__(self, parent) -> None:
         super().__init__(parent)
 
-        self.dtl = TrignoConnector(self._update_sensor_data)
+        self.dtl = TrignoConnector(self._on_sensor_data_updated)
 
         button_frame = ttk.Frame(self)
         button_frame.pack(pady=(30, 20))
@@ -68,10 +68,10 @@ class SensorsTab(ttk.Frame):
 
     """UI Feedback Update"""
 
-    def _update_sensor_data(self, voltages: tuple[float, ...]):
-        self.after(0, self._apply_sensor_update, voltages)
+    def _on_sensor_data_updated(self, voltages: tuple[float, ...]):
+        self.after(0, self._update_sensor_info, voltages)
 
-    def _apply_sensor_update(self, voltages):
+    def _update_sensor_info(self, voltages):
         for i in range(len(voltages)):
             if i < len(self.voltage_labels):
                 self.voltage_labels[i].config(text=f"{voltages[i]:>+1.5f}")
